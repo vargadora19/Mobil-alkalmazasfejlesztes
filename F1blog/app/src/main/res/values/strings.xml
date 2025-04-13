@@ -8,4 +8,6 @@
     <string name="password_again">repeat your password</string>
     <string name="birth_date">birth date</string>
     <string name="f1_logo">F1_logo</string>
+    <string name="login_as_guest">Login as guest</string>
+    <string name="blog">Ez lesz majd a blog</string>
 </resources>

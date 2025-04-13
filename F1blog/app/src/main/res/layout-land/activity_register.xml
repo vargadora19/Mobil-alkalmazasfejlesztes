@@ -5,8 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    tools:context=".RegisterActivity">
 
   <LinearLayout
       android:id="@+id/main"
@@ -32,7 +32,7 @@
         android:layout_marginTop="20dp"
         android:textSize="30sp"
         android:textColor="#FF1801"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <EditText
         android:id="@+id/editTextUsername"
@@ -45,7 +45,7 @@
         android:layout_marginTop="60dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"/>
 
     <EditText
         android:id="@+id/userEmail"
@@ -58,7 +58,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"/>
 
     <EditText
         android:id="@+id/birthDate"
@@ -71,7 +71,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"/>
 
     <EditText
         android:id="@+id/editTextPassword"
@@ -84,7 +84,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"/>
 
     <EditText
         android:id="@+id/passwordAgain"
@@ -97,7 +97,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
-        android:minHeight="48dp" />
+        android:minHeight="48dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -132,7 +132,8 @@
           android:text="@string/login"
           android:textColor="#FF1801"
           android:background="@android:color/transparent"
-          tools:ignore="UsingOnClickInXml" />
+          tools:ignore="UsingOnClickInXml"
+          android:layout_marginBottom="30dp"/>
     </RelativeLayout>
 
   </LinearLayout>
