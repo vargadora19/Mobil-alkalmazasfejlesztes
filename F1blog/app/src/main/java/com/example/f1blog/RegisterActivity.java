@@ -25,6 +25,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class RegisterActivity extends AppCompatActivity {
     private static final String LOG_TAG=RegisterActivity.class.getName();
     private static final String PREF_KEY=MainActivity.class.getPackage().toString();
@@ -71,7 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
         String username=preferences.getString("username", "");
         String password=preferences.getString("password","");
 
-        editTextUsername.setText(username);
+        userEmail.setText(username);
         editTextPassword.setText(password);
 
         mAuth=FirebaseAuth.getInstance();
@@ -92,6 +96,29 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    private boolean isValidDate(String dateStr) {
+        String[] formats = {"yyyy.MM.dd", "yyyy-MM-dd", "yyyy/MM/dd"};
+        for (String format : formats) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat(format);
+                sdf.setLenient(false);
+                Date inputDate = sdf.parse(dateStr);
+
+                Date today = new Date();
+                if (inputDate.after(today)) {
+                    return false;
+                }
+
+                return true;
+            } catch (ParseException ignored) {
+            }
+        }
+        return false;
+    }
+
+
+
+
     public void register(View view) {
         String userNameStr = editTextUsername.getText().toString().trim();
         String emailStr = userEmail.getText().toString().trim();
@@ -103,6 +130,12 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "Please fill out all fields!", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        if (!isValidDate(birthdateInput)) {
+            Toast.makeText(this, "Please enter a valid birthdate (format: yyyy.MM.dd, yyyy-MM-dd or yyyy/MM/dd)", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         if (!passwordStr.equals(passwordAgainStr)) {
             Toast.makeText(this, "Passwords do not match!", Toast.LENGTH_SHORT).show();
