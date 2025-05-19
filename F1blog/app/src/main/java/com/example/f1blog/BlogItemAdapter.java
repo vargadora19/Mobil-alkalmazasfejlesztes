@@ -124,24 +124,35 @@ public class BlogItemAdapter extends RecyclerView.Adapter<BlogItemAdapter.ViewHo
             });
 
             // Delete gomb eseménykezelése
+            // Delete gomb eseménykezelése, megerősítést kérünk a felhasználótól
             btnDelete.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
                     BlogItem currentItem = mBlogItemsData.get(pos);
-                    // Töröljük a dokumentumot a Firestore-ból
-                    FirebaseFirestore.getInstance().collection("Items")
-                            .document(currentItem._getId())
-                            .delete()
-                            .addOnSuccessListener(aVoid -> {
-                                mBlogItemsData.remove(pos);
-                                notifyItemRemoved(pos);
-                                Toast.makeText(mContext, "Blog deleted", Toast.LENGTH_SHORT).show();
+                    // Megjelenítünk egy megerősítő dialogot
+                    new AlertDialog.Builder(mContext)
+                            .setTitle("Blog delete")
+                            .setMessage("Are you sure you want to delete this?")
+                            .setPositiveButton("Yes", (dialog, which) -> {
+                                FirebaseFirestore.getInstance().collection("Items")
+                                        .document(currentItem._getId())
+                                        .delete()
+                                        .addOnSuccessListener(aVoid -> {
+                                            mBlogItemsData.remove(pos);
+                                            notifyItemRemoved(pos);
+                                            Toast.makeText(mContext, "Blog deleted", Toast.LENGTH_SHORT).show();
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            Toast.makeText(mContext, "Unsuccessful: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        });
                             })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(mContext, "Deletion failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            });
+                            .setNegativeButton("No", (dialog, which) -> {
+                                dialog.dismiss();
+                            })
+                            .show();
                 }
             });
+
         }
 
         public void bindTo(BlogItem currentItem) {
