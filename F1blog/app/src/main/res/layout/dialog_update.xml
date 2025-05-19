@@ -9,14 +9,14 @@
     <EditText
         android:id="@+id/editTextUpdateTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="@string/blog_title"
         android:inputType="text" />
 
     <EditText
         android:id="@+id/editTextUpdateInfo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="@string/blog_information"
         android:inputType="textMultiLine"
         android:layout_marginTop="8dp" />

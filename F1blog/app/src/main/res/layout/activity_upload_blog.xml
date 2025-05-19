@@ -8,7 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".UploadBlogActivity">
 
-    <!-- Toolbar a menübárhoz -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
@@ -20,7 +19,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Blog title EditText -->
     <ImageView
         android:id="@+id/f1"
         android:layout_width="wrap_content"
@@ -34,7 +32,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Blog information EditText -->
     <EditText
         android:id="@+id/editTextBlogTitle"
         android:layout_width="0dp"
@@ -60,12 +57,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
-    <!-- Feltöltés gomb -->
     <Button
         android:id="@+id/uploadButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Upload Blog"
+        android:text="@string/upload_blog"
         android:backgroundTint="#FF1801"
         android:textColor="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@id/editTextBlogInfo"

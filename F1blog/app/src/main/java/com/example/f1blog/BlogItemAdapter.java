@@ -33,7 +33,6 @@ public class BlogItemAdapter extends RecyclerView.Adapter<BlogItemAdapter.ViewHo
 
     public BlogItemAdapter(Context context, ArrayList<BlogItem> itemsData) {
         this.mBlogItemsData = itemsData;
-        // Győződj meg róla, hogy mBlogItemsDataAll független példány legyen (ha szükséges a szűréshez)
         this.mBlogItemsDataAll = new ArrayList<>(itemsData);
         this.mContext = context;
     }
@@ -102,8 +101,8 @@ public class BlogItemAdapter extends RecyclerView.Adapter<BlogItemAdapter.ViewHo
         private TextView mTitleText;
         private TextView mInfoText;
         private ImageView mItemImage;
-        private Button btnUpdate; // Update gomb
-        private Button btnDelete; // Delete gomb (ID: btnReadMore a layoutban)
+        private Button btnUpdate;
+        private Button btnDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -112,9 +111,8 @@ public class BlogItemAdapter extends RecyclerView.Adapter<BlogItemAdapter.ViewHo
             mInfoText = itemView.findViewById(R.id.postExcerpt);
             mItemImage = itemView.findViewById(R.id.postImage);
             btnUpdate = itemView.findViewById(R.id.btnUpdate);
-            btnDelete = itemView.findViewById(R.id.btnDelete); // layoutban a Delete gomb ID-je
+            btnDelete = itemView.findViewById(R.id.btnDelete);
 
-            // Update gomb eseménykezelése
             btnUpdate.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
@@ -123,13 +121,10 @@ public class BlogItemAdapter extends RecyclerView.Adapter<BlogItemAdapter.ViewHo
                 }
             });
 
-            // Delete gomb eseménykezelése
-            // Delete gomb eseménykezelése, megerősítést kérünk a felhasználótól
             btnDelete.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
                     BlogItem currentItem = mBlogItemsData.get(pos);
-                    // Megjelenítünk egy megerősítő dialogot
                     new AlertDialog.Builder(mContext)
                             .setTitle("Blog delete")
                             .setMessage("Are you sure you want to delete this?")
@@ -165,7 +160,6 @@ public class BlogItemAdapter extends RecyclerView.Adapter<BlogItemAdapter.ViewHo
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle("Update Blog");
 
-            // Inflate a custom dialog layout
             View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.dialog_update, (ViewGroup) itemView, false);
             EditText inputTitle = viewInflated.findViewById(R.id.editTextUpdateTitle);
             EditText inputInfo = viewInflated.findViewById(R.id.editTextUpdateInfo);

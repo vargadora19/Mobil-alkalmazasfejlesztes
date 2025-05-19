@@ -3,7 +3,6 @@ package com.example.f1blog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +36,6 @@ public class BlogListActivity extends AppCompatActivity {
     private CollectionReference mItems;
     private int gridNumber = 1;
 
-    // Ezt a változót a pagination lekérdezésekhez használjuk
     private DocumentSnapshot lastVisibleDocument;
 
     @Override
@@ -46,14 +43,11 @@ public class BlogListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blog_start);
 
-        // Toolbar beállítása
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Ablak insetek beállítása (például padding, ha szükséges)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> insets);
 
-        // Felhasználó hitelesítés ellenőrzése
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Log.d(LOG_TAG, "Unauthenticated user");
@@ -62,7 +56,6 @@ public class BlogListActivity extends AppCompatActivity {
         }
         Log.d(LOG_TAG, "Authenticated user");
 
-        // RecyclerView beállítása
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, gridNumber));
 
@@ -70,26 +63,18 @@ public class BlogListActivity extends AppCompatActivity {
         mAdapter = new BlogItemAdapter(this, mItemList);
         mRecyclerView.setAdapter(mAdapter);
 
-        // Firestore inicializálása & kollekció referencia beállítása
         mFirestore = FirebaseFirestore.getInstance();
         mItems = mFirestore.collection("Items");
 
-        // Alap adatok lekérdezése az általános queryData()-val
         queryData();
 
-        // Ütemezzük a Notification Job-ot (JobScheduler használatával)
         scheduleNotificationJob();
 
-        // Ezeket a példákhoz tartozó lekérdezési metódusokat (tesztelési célból) meghívhatod:
         queryPopularBlogs();
         queryBlogsWithPagination();
-        queryBlogsByCategory("Tech"); // Például a "Tech" kategória blogjai
+        queryBlogsByCategory("Tech");
     }
 
-    /**
-     * Alapértelmezett adatok lekérdezése.
-     * Az "Items" kollekcióból az első 10 dokumentumot kérjük le, rendezve a "name" mező szerint.
-     */
     private void queryData() {
         mItemList.clear();
         mItems.orderBy("name")
@@ -116,9 +101,6 @@ public class BlogListActivity extends AppCompatActivity {
                 });
     }
 
-    /**
-     * Ha nincsenek adatok, inicializáljuk azokat az erőforrásokból.
-     */
     private void initializeData() {
         Log.d(LOG_TAG, "initializeData() called");
         String[] itemsList = getResources().getStringArray(R.array.blog_items_name);
@@ -136,10 +118,7 @@ public class BlogListActivity extends AppCompatActivity {
         itemsImageResource.recycle();
     }
 
-    /**
-     * Lekérdezés 1:
-     * Blogok lekérése, melyek "views" mezője legalább 100, rendezve a "views" szerint csökkenő sorrendben, és limitálva 5 dokumentumra.
-     */
+    //lekerdezes1:
     private void queryPopularBlogs() {
         mItems.whereGreaterThanOrEqualTo("views", 100)
                 .orderBy("views", Query.Direction.DESCENDING)
@@ -160,11 +139,7 @@ public class BlogListActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * Lekérdezés 2:
-     * Blogok lekérése a "timestamp" alapján növekvő sorrendben, limitálva 5 dokumentumra.
-     * Ha már van utolsó dokumentum, a következő oldal lekéréséhez a startAfter() metódust használjuk (pagination).
-     */
+    //lekerdezes2:
     private void queryBlogsWithPagination() {
         Query query = mItems.orderBy("timestamp", Query.Direction.ASCENDING).limit(5);
         if (lastVisibleDocument != null) {
@@ -192,11 +167,7 @@ public class BlogListActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Log.e(LOG_TAG, "Pagination query failed", e));
     }
 
-    /**
-     * Lekérdezés 3:
-     * Egy adott kategóriába tartozó blogok lekérése, ahol a "category" mező egyenlő az adott értékkel.
-     * A dokumentumok a "timestamp" alapján csökkenő sorrendben kerülnek rendezésre, limitálva 10 dokumentumra.
-     */
+    //lekerdezes3:
     private void queryBlogsByCategory(String category) {
         mItems.whereEqualTo("category", category)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -214,16 +185,12 @@ public class BlogListActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Log.e(LOG_TAG, "Query by category failed", e));
     }
 
-    /**
-     * Notification Job ütemezése:
-     * A JobScheduler segítségével ütemezünk egy értesítési feladatot, mely a NotificationJobService-ben kerül
-     * végrehajtásra. A minimum késleltetés 60 000 ms (1 perc), a legkésőbb 120 000 ms (2 perc) kezdésével.
-     */
+    //Job scheduler
     private void scheduleNotificationJob() {
         ComponentName componentName = new ComponentName(this, NotificationJobService.class);
         JobInfo jobInfo = new JobInfo.Builder(1, componentName)
-                .setMinimumLatency(60000)    // 1 perc késleltetés
-                .setOverrideDeadline(120000)  // legkésőbb 2 perc múlva lefut
+                .setMinimumLatency(60000)
+                .setOverrideDeadline(120000)
                 .build();
         JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
         if (jobScheduler != null) {

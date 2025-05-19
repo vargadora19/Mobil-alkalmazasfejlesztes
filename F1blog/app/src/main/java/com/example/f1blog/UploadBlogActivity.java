@@ -30,7 +30,6 @@ public class UploadBlogActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     private CollectionReference mItems;
 
-    // Kulcsok a SharedPreferences-hez
     private static final String PREFS_NAME = "UploadBlogPrefs";
     private static final String KEY_TITLE = "savedTitle";
     private static final String KEY_INFO = "savedInfo";
@@ -40,11 +39,9 @@ public class UploadBlogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_blog);
 
-        // Toolbar beállítása, hasonlóan a BlogListActivity-hez
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // A rendszer által biztosított insetek alkalmazása a fő layout-ra
         ConstraintLayout mainLayout = findViewById(R.id.main);
         ViewCompat.setOnApplyWindowInsetsListener(mainLayout, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -52,16 +49,13 @@ public class UploadBlogActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Layout elemek referenciáinak kezelését
         editTextTitle = findViewById(R.id.editTextBlogTitle);
         editTextInfo = findViewById(R.id.editTextBlogInfo);
         uploadButton = findViewById(R.id.uploadButton);
 
-        // Firestore példány és a "Items" kollekció inicializálása
         mFirestore = FirebaseFirestore.getInstance();
         mItems = mFirestore.collection("Items");
 
-        // Feltöltés gomb működése: ellenőrizzük az adatokat, majd feltöltjük a Firestore-ba
         uploadButton.setOnClickListener(v -> {
             String title = editTextTitle.getText().toString().trim();
             String info = editTextInfo.getText().toString().trim();
@@ -71,13 +65,11 @@ public class UploadBlogActivity extends AppCompatActivity {
                 return;
             }
 
-            // Az előzőleg definiált BlogItem osztályt használjuk; default képként a f1 logó szerepel
             BlogItem newItem = new BlogItem(R.drawable.f1, info, title);
 
             mItems.add(newItem)
                     .addOnSuccessListener(documentReference -> {
                         Toast.makeText(UploadBlogActivity.this, "Blog uploaded successfully", Toast.LENGTH_SHORT).show();
-                        // Feltöltés után töröljük a mentett vázlatot, majd visszatérünk a bloglista oldalra
                         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.remove(KEY_TITLE);
@@ -92,7 +84,6 @@ public class UploadBlogActivity extends AppCompatActivity {
         });
     }
 
-    // A felhasználó által beírt adatokat elmentjük, mielőtt az activity háttérbe kerülne
     @Override
     protected void onPause() {
         super.onPause();
@@ -103,7 +94,6 @@ public class UploadBlogActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    // Visszatéréskor visszatöltjük az elmentett adatokat, ha vannak
     @Override
     protected void onResume() {
         super.onResume();
@@ -116,14 +106,12 @@ public class UploadBlogActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Menü inflálása, hasonlóan a BlogListActivity-hez
         getMenuInflater().inflate(R.menu.blog_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Menüelemek kezelése
         int id = item.getItemId();
         if (id == R.id.view_selector) {
             startActivity(new Intent(this, BlogListActivity.class));

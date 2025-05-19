@@ -3,8 +3,6 @@ package com.example.f1blog;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.job.JobParameters;
-import android.app.job.JobService;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -36,8 +34,6 @@ public class NotificationJobService extends android.app.job.JobService {
     @Override
     public boolean onStartJob(android.app.job.JobParameters params) {
         Log.d(TAG, "Job started");
-
-        // Android 13 (API 33) vagy újabb esetén ellenőrizzük a POST_NOTIFICATIONS engedélyt
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -47,10 +43,8 @@ public class NotificationJobService extends android.app.job.JobService {
             }
         }
 
-        // Létrehozzuk a Notification csatornát, ha szükséges (API 26+)
         createNotificationChannel();
 
-        // Értesítés építése
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.f1) // Győződj meg róla, hogy ez a drawable létezik
                 .setContentTitle("F1 Blog Emlékeztető")
@@ -60,10 +54,8 @@ public class NotificationJobService extends android.app.job.JobService {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
-        // Most már biztonságos a notify hívás, mert ellenőriztük az engedélyt
         notificationManager.notify(1, builder.build());
 
-        // A job befejeződött
         jobFinished(params, false);
         return true;
     }

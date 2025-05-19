@@ -1,7 +1,7 @@
 package com.example.f1blog;
 
 public class BlogItem {
-    private String id; // dokumentum azonosító a Firestore-ban
+    private String id;
     private String name;
     private String info;
     private int imageResource;
@@ -15,7 +15,6 @@ public class BlogItem {
         this.name = name;
     }
 
-    // Getterek és setterek
     public String _getId() {
         return id;
     }
@@ -36,8 +35,5 @@ public class BlogItem {
     }
     public int getImageResource() {
         return imageResource;
-    }
-    public void setImageResource(int imageResource) {
-        this.imageResource = imageResource;
     }
 }
