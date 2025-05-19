@@ -39,16 +39,34 @@
             android:ellipsize="end"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <Button
-            android:id="@+id/btnReadMore"
-            android:layout_width="wrap_content"
+        <!-- Új gombok egy sorban: az eredeti Delete gomb AND az új Update gomb -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/delete"
-            android:backgroundTint="#FF1801"
-            android:textColor="#FFFFFF" />
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp">
+
+            <!-- Meglévő Delete gomb -->
+            <Button
+                android:id="@+id/btnReadMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/delete"
+                android:backgroundTint="#FF1801"
+                android:textColor="#FFFFFF" />
+
+            <!-- Új Update gomb -->
+            <Button
+                android:id="@+id/btnUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/update"
+                android:backgroundTint="#FF1801"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

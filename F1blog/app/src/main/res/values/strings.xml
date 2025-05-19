@@ -19,6 +19,8 @@
     <string name="blog_list">Blog list</string>
     <string name="delete">Delete</string>
     <string name="update">Update</string>
+    <string name="blog_information">Blog Information</string>
+    <string name="blog_title">Blog Title</string>
 
     <string-array name="blog_items_name">
         <item>Leclerc left with ‘no words’ over Ferrari’s Q2 exit in Imola as Hamilton ‘devastated’ not to see results</item>

@@ -76,23 +76,28 @@ public class BlogListActivity extends AppCompatActivity {
 
     private void queryData() {
         mItemList.clear();
+
         mItems.orderBy("name").limit(10).get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    // Minden dokumentumból létrehozunk egy BlogItem példányt, és beállítjuk az id-t.
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         BlogItem item = document.toObject(BlogItem.class);
+                        item.setId(document.getId());  // Beállítjuk az egyedi dokumentum azonosítót
                         mItemList.add(item);
                     }
-                    if (mItemList.size() == 0) {
-                        initializeData(); // első indításkor feltölt
+
+                    if (mItemList.isEmpty()) {
+                        initializeData();
                     } else {
                         mAdapter.notifyDataSetChanged();
                     }
                 })
                 .addOnFailureListener(e -> {
                     Log.e(LOG_TAG, "QUERY FAIL", e);
-                    initializeData(); // ha hiba, akkor is próbálj feltölteni
+                    initializeData();
                 });
     }
+
 
     private void initializeData() {
         Log.d(LOG_TAG, "initializeData() called");
