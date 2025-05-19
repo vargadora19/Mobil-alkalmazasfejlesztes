@@ -2,31 +2,40 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- Megtartjuk a home (view_selector) menüpontot -->
     <item
         android:id="@+id/view_selector"
         android:title="@string/home"
         android:icon="@drawable/home"
         app:showAsAction="always" />
 
+    <!-- Eltávolítjuk a search menüpontot -->
+    <!--
     <item
         android:id="@+id/search_bar"
         android:title="@string/search"
         android:icon="@drawable/ic_search"
         app:showAsAction="always"
         app:actionViewClass="android.widget.SearchView" />
+    -->
 
+    <!-- Megtartjuk az új blog (new_blog) menüpontot -->
     <item
         android:id="@+id/new_blog"
         android:title="@string/add"
         android:icon="@drawable/ic_new_blog"
         app:showAsAction="always" />
 
+    <!-- Eltávolítjuk a settings menüpontot -->
+    <!--
     <item
         android:id="@+id/settings_button"
         android:title="@string/settings"
         app:showAsAction="never"
         app:actionViewClass="android.widget.SearchView" />
+    -->
 
+    <!-- Megtartjuk a logout menüpontot -->
     <item
         android:id="@+id/logout_button"
         android:title="@string/logout"
