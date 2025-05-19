@@ -121,6 +121,7 @@ public class BlogItemAdapter extends RecyclerView.Adapter<BlogItemAdapter.ViewHo
                     showUpdateDialog(currentItem, pos);
                 }
             });
+
         }
 
 
