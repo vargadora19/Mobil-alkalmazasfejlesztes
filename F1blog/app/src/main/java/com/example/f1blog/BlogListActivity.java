@@ -155,6 +155,9 @@ public class BlogListActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.new_blog) {
             Log.d(LOG_TAG, "New blog clicked!");
+            // Itt indítjuk el az UploadBlogActivity-t
+            Intent intent = new Intent(this, UploadBlogActivity.class);
+            startActivity(intent);
             return true;
         } else if (id == R.id.search_bar) {
             Log.d(LOG_TAG, "Search clicked!");
@@ -168,4 +171,5 @@ public class BlogListActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+
 }
