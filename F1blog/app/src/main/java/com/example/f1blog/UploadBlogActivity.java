@@ -1,6 +1,7 @@
 package com.example.f1blog;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -29,12 +30,17 @@ public class UploadBlogActivity extends AppCompatActivity {
     private FirebaseFirestore mFirestore;
     private CollectionReference mItems;
 
+    // Kulcsok a SharedPreferences-hez
+    private static final String PREFS_NAME = "UploadBlogPrefs";
+    private static final String KEY_TITLE = "savedTitle";
+    private static final String KEY_INFO = "savedInfo";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_blog);
 
-        // Állítsuk be a Toolbar-t, hasonlóan, mint a BlogListActivity-ben
+        // Toolbar beállítása, hasonlóan a BlogListActivity-hez
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -46,7 +52,7 @@ public class UploadBlogActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Referenciák kezelése a layout elemekre
+        // Layout elemek referenciáinak kezelését
         editTextTitle = findViewById(R.id.editTextBlogTitle);
         editTextInfo = findViewById(R.id.editTextBlogInfo);
         uploadButton = findViewById(R.id.uploadButton);
@@ -55,7 +61,7 @@ public class UploadBlogActivity extends AppCompatActivity {
         mFirestore = FirebaseFirestore.getInstance();
         mItems = mFirestore.collection("Items");
 
-        // Feltöltés gomb kezelése: ellenőrizzük az adatokat és töltjük fel a Firestore‑ba
+        // Feltöltés gomb működése: ellenőrizzük az adatokat, majd feltöltjük a Firestore-ba
         uploadButton.setOnClickListener(v -> {
             String title = editTextTitle.getText().toString().trim();
             String info = editTextInfo.getText().toString().trim();
@@ -65,13 +71,18 @@ public class UploadBlogActivity extends AppCompatActivity {
                 return;
             }
 
-            // Az alkalmazás korábbi BlogItem osztályát használjuk, default képként például a f1 logót alkalmazva
+            // Az előzőleg definiált BlogItem osztályt használjuk; default képként a f1 logó szerepel
             BlogItem newItem = new BlogItem(R.drawable.f1, info, title);
 
             mItems.add(newItem)
                     .addOnSuccessListener(documentReference -> {
                         Toast.makeText(UploadBlogActivity.this, "Blog uploaded successfully", Toast.LENGTH_SHORT).show();
-                        // Sikeres feltöltés után visszaléphetünk a blogok listájára
+                        // Feltöltés után töröljük a mentett vázlatot, majd visszatérünk a bloglista oldalra
+                        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.remove(KEY_TITLE);
+                        editor.remove(KEY_INFO);
+                        editor.apply();
                         finish();
                     })
                     .addOnFailureListener(e -> {
@@ -81,9 +92,31 @@ public class UploadBlogActivity extends AppCompatActivity {
         });
     }
 
+    // A felhasználó által beírt adatokat elmentjük, mielőtt az activity háttérbe kerülne
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(KEY_TITLE, editTextTitle.getText().toString());
+        editor.putString(KEY_INFO, editTextInfo.getText().toString());
+        editor.apply();
+    }
+
+    // Visszatéréskor visszatöltjük az elmentett adatokat, ha vannak
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        String savedTitle = prefs.getString(KEY_TITLE, "");
+        String savedInfo = prefs.getString(KEY_INFO, "");
+        editTextTitle.setText(savedTitle);
+        editTextInfo.setText(savedInfo);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // A menü inflálása azonos beállításokkal, mint a BlogListActivity-ben
+        // Menü inflálása, hasonlóan a BlogListActivity-hez
         getMenuInflater().inflate(R.menu.blog_menu, menu);
         return true;
     }
@@ -93,7 +126,6 @@ public class UploadBlogActivity extends AppCompatActivity {
         // Menüelemek kezelése
         int id = item.getItemId();
         if (id == R.id.view_selector) {
-            // Például visszaléphetünk a fő bloglistára
             startActivity(new Intent(this, BlogListActivity.class));
             finish();
             return true;

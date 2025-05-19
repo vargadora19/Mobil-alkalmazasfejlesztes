@@ -103,6 +103,7 @@ public class BlogItemAdapter extends RecyclerView.Adapter<BlogItemAdapter.ViewHo
         private TextView mInfoText;
         private ImageView mItemImage;
         private Button btnUpdate; // Update gomb
+        private Button btnDelete; // Delete gomb (ID: btnReadMore a layoutban)
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -110,10 +111,10 @@ public class BlogItemAdapter extends RecyclerView.Adapter<BlogItemAdapter.ViewHo
             mTitleText = itemView.findViewById(R.id.postTitle);
             mInfoText = itemView.findViewById(R.id.postExcerpt);
             mItemImage = itemView.findViewById(R.id.postImage);
-            // Feltételezzük, hogy a Delete gomb már létezik (pl. btnReadMore) és most vesszük fel a btnUpdate-ot
             btnUpdate = itemView.findViewById(R.id.btnUpdate);
+            btnDelete = itemView.findViewById(R.id.btnDelete); // layoutban a Delete gomb ID-je
 
-            // Példa: az Update gomb megnyomása esetén a dialógus megjelenítése
+            // Update gomb eseménykezelése
             btnUpdate.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
@@ -122,8 +123,26 @@ public class BlogItemAdapter extends RecyclerView.Adapter<BlogItemAdapter.ViewHo
                 }
             });
 
+            // Delete gomb eseménykezelése
+            btnDelete.setOnClickListener(v -> {
+                int pos = getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    BlogItem currentItem = mBlogItemsData.get(pos);
+                    // Töröljük a dokumentumot a Firestore-ból
+                    FirebaseFirestore.getInstance().collection("Items")
+                            .document(currentItem._getId())
+                            .delete()
+                            .addOnSuccessListener(aVoid -> {
+                                mBlogItemsData.remove(pos);
+                                notifyItemRemoved(pos);
+                                Toast.makeText(mContext, "Blog deleted", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(mContext, "Deletion failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                }
+            });
         }
-
 
         public void bindTo(BlogItem currentItem) {
             mTitleText.setText(currentItem.getName());
@@ -135,7 +154,7 @@ public class BlogItemAdapter extends RecyclerView.Adapter<BlogItemAdapter.ViewHo
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle("Update Blog");
 
-            // Inflate the custom dialog layout
+            // Inflate a custom dialog layout
             View viewInflated = LayoutInflater.from(mContext).inflate(R.layout.dialog_update, (ViewGroup) itemView, false);
             EditText inputTitle = viewInflated.findViewById(R.id.editTextUpdateTitle);
             EditText inputInfo = viewInflated.findViewById(R.id.editTextUpdateInfo);
@@ -152,17 +171,14 @@ public class BlogItemAdapter extends RecyclerView.Adapter<BlogItemAdapter.ViewHo
                 if (newTitle.isEmpty() || newInfo.isEmpty()) {
                     Toast.makeText(mContext, "Fields cannot be empty", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Készítünk egy frissítendő map-et
                     Map<String, Object> updateMap = new HashMap<>();
                     updateMap.put("name", newTitle);
                     updateMap.put("info", newInfo);
 
-                    // Frissítjük a Firestore dokumentumot a blogItem id-jával
                     FirebaseFirestore.getInstance().collection("Items")
                             .document(blogItem._getId())
                             .update(updateMap)
                             .addOnSuccessListener(aVoid -> {
-                                // Helyi változtatások
                                 blogItem.setName(newTitle);
                                 blogItem.setInfo(newInfo);
                                 notifyItemChanged(position);
