@@ -39,7 +39,7 @@
         android:id="@+id/editTextBlogTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="110dp"
         android:hint="@string/blog_title"
         android:inputType="text"
         android:padding="16dp"
