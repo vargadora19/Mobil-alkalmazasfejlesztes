@@ -70,22 +70,22 @@
             app:layout_constraintTop_toBottomOf="@+id/userEmail"
             app:layout_constraintVertical_bias="0.085" />
 
-        <Button
-            android:id="@+id/loginAsGuestButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:onClick="loginAsGuest"
-            android:text="@string/login_as_guest"
-            android:backgroundTint="#FF1801"
-            tools:ignore="UsingOnClickInXml"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.493"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextPassword"
-            app:layout_constraintVertical_bias="0.089" />
+<!--        <Button-->
+<!--            android:id="@+id/loginAsGuestButton"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="15dp"-->
+<!--            android:layout_marginEnd="15dp"-->
+<!--            android:onClick="loginAsGuest"-->
+<!--            android:text="@string/login_as_guest"-->
+<!--            android:backgroundTint="#FF1801"-->
+<!--            tools:ignore="UsingOnClickInXml"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.493"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/editTextPassword"-->
+<!--            app:layout_constraintVertical_bias="0.089" />-->
 
         <Button
             android:id="@+id/loginButton"
@@ -101,7 +101,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.493"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loginAsGuestButton"
+            app:layout_constraintTop_toBottomOf="@+id/editTextPassword"
             app:layout_constraintVertical_bias="0.030" />
 
         <Button

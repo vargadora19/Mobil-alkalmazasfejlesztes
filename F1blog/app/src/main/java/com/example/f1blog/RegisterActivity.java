@@ -1,7 +1,5 @@
 package com.example.f1blog;
 
-import static androidx.core.content.PackageManagerCompat.LOG_TAG;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -165,7 +163,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void startBlog(){
-        Intent intent=new Intent(this, BlogStart.class);
+        Intent intent=new Intent(this, BlogListActivity.class);
         startActivity(intent);
     }
 

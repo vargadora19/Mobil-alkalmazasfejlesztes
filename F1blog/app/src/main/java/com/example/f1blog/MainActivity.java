@@ -22,25 +22,22 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG=MainActivity.class.getName();
     private static final String PREF_KEY=MainActivity.class.getPackage().toString();
     private static final int SECRET_KEY=0;
-
     EditText userName;
     EditText password;
-
     private SharedPreferences preferences;
-
-
     private FirebaseAuth mAuth;
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseFirestore.setLoggingEnabled(true);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
@@ -57,11 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.button_click);
 
-        findViewById(R.id.loginAsGuestButton).setOnTouchListener((v, event) -> {
-            v.startAnimation(anim);
-            return false;
-        });
-
         findViewById(R.id.loginButton).setOnTouchListener((v, event) -> {
             v.startAnimation(anim);
             return false;
@@ -74,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
         Log.i(LOG_TAG, "onCreate");
     }
-
 
     public void login(View view) {
         String userNameStr = userName.getText().toString().trim();
@@ -99,9 +90,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-
-
     public void loginAsGuest(View view) {
         mAuth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -118,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startBlog(){
-        Intent intent=new Intent(this, BlogStart.class);
+        Intent intent=new Intent(this, BlogListActivity.class);
         startActivity(intent);
     }
 
@@ -127,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("SECRET_KEY", SECRET_KEY);
         startActivity(intent);
     }
-
 
     @Override
     protected void onStart() {
@@ -150,12 +137,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
         SharedPreferences.Editor editor=preferences.edit();
         editor.putString("username", userName.getText().toString());
         editor.putString("password", password.getText().toString());
         editor.apply();
-
         Log.i(LOG_TAG, "onPause");
     }
 
@@ -170,6 +155,4 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
         Log.i(LOG_TAG, "onRestart");
     }
-
-
 }
